@@ -1,6 +1,7 @@
-const path = require('path')
+const path = require('path');
+const HtmlWebPackPlugin = require('html-webpack-plugin');
 
-const outputPath = path.resolve(__dirname, 'dist')
+const outputPath = path.resolve(__dirname, 'dist');
 
 module.exports = {
   entry: './src/index.js',
@@ -10,6 +11,15 @@ module.exports = {
   },
   module: {
     rules: [
+      
+      //babel
+      { 
+        //test: /\.js$/,
+        test: /\.jsx?$/,  //react用にjsxも登録
+        exclude: /node_modules/, 
+        loader: "babel-loader"
+      },
+      
       //CSSに適用するloader
       {
         test:/\.css$/,
@@ -34,10 +44,20 @@ module.exports = {
           limit: 2048,
           name: './images/[name].[ext]'
         }
+      },
+      {
+        test: /\.html$/,
+        loader: 'html-loader'
       }
     ]
   },
   devServer: {
     contentBase: outputPath
-  }
+  },
+  plugins: [
+    new HtmlWebPackPlugin({
+      template: './src/index.html',
+      filename: './index.html'
+    })
+  ]
 }
